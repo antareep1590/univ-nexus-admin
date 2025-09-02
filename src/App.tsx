@@ -7,7 +7,9 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SignIn from "./pages/admin/SignIn";
 import Dashboard from "./pages/admin/Dashboard";
-import Users from "./pages/admin/Users";
+import Students from "./pages/admin/Students";
+import Buyers from "./pages/admin/Buyers";
+import Profile from "./pages/admin/Profile";
 import Gigs from "./pages/admin/Gigs";
 import Orders from "./pages/admin/Orders";
 import Earnings from "./pages/admin/Earnings";
@@ -28,7 +30,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
-          <Route path="/admin/users" element={<AdminLayout><Users /></AdminLayout>} />
+          <Route path="/admin/students" element={<AdminLayout><Students /></AdminLayout>} />
+          <Route path="/admin/buyers" element={<AdminLayout><Buyers /></AdminLayout>} />
+          <Route path="/admin/profile" element={<AdminLayout><Profile /></AdminLayout>} />
           <Route path="/admin/gigs" element={<AdminLayout><Gigs /></AdminLayout>} />
           <Route path="/admin/orders" element={<AdminLayout><Orders /></AdminLayout>} />
           <Route path="/admin/earnings" element={<AdminLayout><Earnings /></AdminLayout>} />

@@ -65,12 +65,27 @@
     --shadow-lg: 0 10px 15px -3px hsl(220 13% 69% / 0.1), 0 4px 6px -2px hsl(220 13% 69% / 0.05);
     --shadow-primary: 0 4px 14px 0 hsl(var(--primary) / 0.15);
     
-    /* Admin Sidebar Colors */
-    --admin-sidebar-bg: 220 26% 14%;
-    --admin-sidebar-foreground: 220 9% 89%;
-    --admin-sidebar-accent: 145 85% 42%;
-    --admin-sidebar-accent-foreground: 0 0% 100%;
-    --admin-sidebar-border: 220 20% 20%;
+    /* Admin Theme Colors - Calmer Palette */
+    --admin-sidebar-bg: 220 15% 97%;
+    --admin-sidebar-foreground: 220 15% 20%;
+    --admin-sidebar-accent: 150 25% 45%;
+    --admin-sidebar-border: 220 15% 88%;
+    
+    --admin-primary: 150 25% 45%;
+    --admin-primary-foreground: 0 0% 100%;
+    --admin-secondary: 220 15% 94%;
+    --admin-secondary-foreground: 220 15% 20%;
+    
+    --admin-card-bg: 0 0% 100%;
+    --admin-card-border: 220 15% 88%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(150 25% 45%), hsl(150 25% 52%));
+    --shadow-primary: 0 4px 20px hsl(150 25% 45% / 0.12);
+    
+    /* Table Styles */
+    --table-header-bg: 220 15% 96%;
+    --table-border: 220 15% 90%;
+    --table-hover: 220 15% 98%;
     
     /* Transitions */
     --transition-all: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -158,10 +173,52 @@
   }
   
   .nav-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover:bg-[hsl(var(--admin-sidebar-accent))]/10;
+    @apply flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-300;
+    color: hsl(var(--admin-sidebar-foreground) / 0.7);
   }
-  
+
+  .nav-item:hover {
+    background: hsl(var(--admin-sidebar-accent) / 0.1);
+    color: hsl(var(--admin-sidebar-foreground));
+    transform: translateX(2px);
+  }
+
   .nav-item.active {
-    @apply bg-[hsl(var(--admin-sidebar-accent))] text-[hsl(var(--admin-sidebar-accent-foreground))] font-medium;
+    background: hsl(var(--admin-sidebar-accent) / 0.15);
+    color: hsl(var(--admin-sidebar-accent));
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 hsl(var(--admin-sidebar-accent));
+  }
+
+  .admin-card {
+    background: hsl(var(--admin-card-bg));
+    border: 1px solid hsl(var(--admin-card-border));
+    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.03);
+  }
+
+  .stats-card {
+    @apply p-6 rounded-xl border transition-all duration-300 hover:shadow-md;
+    background: hsl(var(--admin-card-bg));
+    border-color: hsl(var(--admin-card-border));
+  }
+
+  .admin-table {
+    @apply w-full border-collapse;
+  }
+
+  .admin-table th {
+    @apply px-4 py-3 text-left text-sm font-semibold border-b;
+    background: hsl(var(--table-header-bg));
+    border-color: hsl(var(--table-border));
+    color: hsl(var(--admin-sidebar-foreground) / 0.8);
+  }
+
+  .admin-table td {
+    @apply px-4 py-3 text-sm border-b;
+    border-color: hsl(var(--table-border));
+  }
+
+  .admin-table tr:hover {
+    background: hsl(var(--table-hover));
   }
 }
