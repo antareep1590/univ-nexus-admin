@@ -255,7 +255,7 @@ export default function Orders() {
         </CardContent>
       </Card>
 
-      {/* Orders List */}
+      {/* Orders Table */}
       <Card className="admin-card">
         <CardHeader>
           <CardTitle>Orders ({filteredOrders.length})</CardTitle>
@@ -264,106 +264,87 @@ export default function Orders() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredOrders.map((order) => (
-              <div key={order.id} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-sm text-muted-foreground">{order.id}</span>
-                      <h3 className="font-medium text-foreground">{order.gigTitle}</h3>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status}
-                      </Badge>
-                      {order.hasDispute && (
-                        <Badge variant="destructive">
-                          <AlertTriangle className="h-3 w-3 mr-1" />
-                          Dispute
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Order Date</TableHead>
+                  <TableHead>Gig/Service Title</TableHead>
+                  <TableHead>Order Number</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredOrders.map((order) => (
+                  <TableRow key={order.id} className="hover:bg-muted/50">
+                    <TableCell>
+                      <span className="text-sm text-muted-foreground">{order.orderDate}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="font-medium text-foreground">{order.gigTitle}</div>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Avatar className="h-4 w-4">
+                              <AvatarImage src={order.seller.avatar} alt={order.seller.name} />
+                              <AvatarFallback className="text-xs">
+                                {order.seller.name.split(' ').map(n => n[0]).join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span>{order.seller.name}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-mono text-sm">{order.id}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getStatusColor(order.status)}>
+                          {order.status}
                         </Badge>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Buyer:</span>
-                        <div className="flex items-center gap-1">
-                          <Avatar className="h-5 w-5">
-                            <AvatarImage src={order.buyer.avatar} alt={order.buyer.name} />
-                            <AvatarFallback className="text-xs">
-                              {order.buyer.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">{order.buyer.name}</span>
-                        </div>
+                        {order.hasDispute && (
+                          <Badge variant="destructive" className="text-xs">
+                            <AlertTriangle className="h-3 w-3 mr-1" />
+                            Dispute
+                          </Badge>
+                        )}
                       </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Seller:</span>
-                        <div className="flex items-center gap-1">
-                          <Avatar className="h-5 w-5">
-                            <AvatarImage src={order.seller.avatar} alt={order.seller.name} />
-                            <AvatarFallback className="text-xs">
-                              {order.seller.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">{order.seller.name}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="text-sm font-medium text-foreground">
-                        ${order.amount}
-                      </div>
-                      
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <MessageSquare className="h-3 w-3" />
-                        <span className="text-xs">{order.messages}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
-                      <div className="text-xs text-muted-foreground">
-                        Ordered: {order.orderDate}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Due: {order.deliveryDate}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Progress:</span>
-                        <div className="w-20">
-                          <Progress value={calculateProgress(order.milestones)} className="h-1" />
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          {order.milestones.completed}/{order.milestones.total}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setSelectedOrder(order)}>
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Details
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <DollarSign className="mr-2 h-4 w-4" />
-                      Issue Refund
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive">
-                      <XCircle className="mr-2 h-4 w-4" />
-                      Cancel Order
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            ))}
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium">${order.amount}</span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setSelectedOrder(order)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem>
+                            <DollarSign className="mr-2 h-4 w-4" />
+                            Issue Refund
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-destructive">
+                            <XCircle className="mr-2 h-4 w-4" />
+                            Cancel Order
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>

@@ -223,7 +223,7 @@ export default function Gigs() {
         </CardContent>
       </Card>
 
-      {/* Gigs List */}
+      {/* Gigs Table */}
       <Card className="admin-card">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -243,107 +243,126 @@ export default function Gigs() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredGigs.map((gig) => (
-              <div key={gig.id} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <Checkbox
-                    checked={selectedGigs.includes(gig.id)}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedGigs([...selectedGigs, gig.id]);
-                      } else {
-                        setSelectedGigs(selectedGigs.filter(id => id !== gig.id));
-                      }
-                    }}
-                  />
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-medium text-foreground">{gig.title}</h3>
-                      <Badge className={getStatusColor(gig.status)}>
-                        {gig.status}
-                      </Badge>
-                      <Badge variant="outline">
-                        {gig.category}
-                      </Badge>
-                      {gig.flags.length > 0 && (
-                        <Badge variant="destructive">
-                          <Flag className="h-3 w-3 mr-1" />
-                          {gig.flags.length} Flag{gig.flags.length > 1 ? 's' : ''}
-                        </Badge>
-                      )}
-                      {gig.reports > 0 && (
-                        <Badge variant="outline" className="text-destructive">
-                          {gig.reports} Report{gig.reports > 1 ? 's' : ''}
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-12">
+                    <Checkbox
+                      checked={selectedGigs.length === filteredGigs.length && filteredGigs.length > 0}
+                      onCheckedChange={handleSelectAll}
+                    />
+                  </TableHead>
+                  <TableHead>Gig Title</TableHead>
+                  <TableHead>Seller</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Price Range</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date Created</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredGigs.map((gig) => (
+                  <TableRow key={gig.id} className="hover:bg-muted/50">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedGigs.includes(gig.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedGigs([...selectedGigs, gig.id]);
+                          } else {
+                            setSelectedGigs(selectedGigs.filter(id => id !== gig.id));
+                          }
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="font-medium text-foreground">{gig.title}</div>
+                        {gig.flags.length > 0 && (
+                          <div className="flex items-center gap-2">
+                            <Badge variant="destructive" className="text-xs">
+                              <Flag className="h-3 w-3 mr-1" />
+                              {gig.flags.length} Flag{gig.flags.length > 1 ? 's' : ''}
+                            </Badge>
+                            <span className="text-xs text-destructive">{gig.flags.join(', ')}</span>
+                          </div>
+                        )}
+                        {gig.reports > 0 && (
+                          <Badge variant="outline" className="text-destructive text-xs">
+                            {gig.reports} Report{gig.reports > 1 ? 's' : ''}
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
                       <div className="flex items-center gap-2">
                         <Avatar className="h-6 w-6">
                           <AvatarImage src={gig.seller.avatar} alt={gig.seller.name} />
-                          <AvatarFallback>
+                          <AvatarFallback className="text-xs">
                             {gig.seller.name.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-muted-foreground">{gig.seller.name}</span>
-                        <div className="flex items-center gap-1">
-                          <Star className="h-3 w-3 fill-warning text-warning" />
-                          <span className="text-xs text-muted-foreground">{gig.seller.rating}</span>
+                        <div>
+                          <div className="text-sm font-medium">{gig.seller.name}</div>
+                          <div className="flex items-center gap-1">
+                            <Star className="h-3 w-3 fill-warning text-warning" />
+                            <span className="text-xs text-muted-foreground">{gig.seller.rating}</span>
+                          </div>
                         </div>
                       </div>
-                      
-                      <div className="text-xs text-muted-foreground">
-                        Submitted {gig.submissionDate}
-                      </div>
-                      
-                      <div className="text-xs text-muted-foreground">
-                        ${gig.packages.basic} - ${gig.packages.premium}
-                      </div>
-                    </div>
-                    
-                    {gig.flags.length > 0 && (
-                      <div className="text-xs text-destructive">
-                        Flags: {gig.flags.join(', ')}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setReviewingGig(gig)}>
-                      <Eye className="mr-2 h-4 w-4" />
-                      Review Details
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {gig.status === "pending" && (
-                      <>
-                        <DropdownMenuItem className="text-success">
-                          <Check className="mr-2 h-4 w-4" />
-                          Approve
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
-                          <X className="mr-2 h-4 w-4" />
-                          Reject
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <MessageSquare className="mr-2 h-4 w-4" />
-                          Request Changes
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            ))}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{gig.category}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium">${gig.packages.basic} - ${gig.packages.premium}</span>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={getStatusColor(gig.status)}>
+                        {gig.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm text-muted-foreground">{gig.submissionDate}</span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setReviewingGig(gig)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          {gig.status === "pending" && (
+                            <>
+                              <DropdownMenuItem className="text-success">
+                                <Check className="mr-2 h-4 w-4" />
+                                Approve
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-destructive">
+                                <X className="mr-2 h-4 w-4" />
+                                Reject
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <MessageSquare className="mr-2 h-4 w-4" />
+                                Request Changes
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>

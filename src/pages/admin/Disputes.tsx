@@ -285,7 +285,7 @@ export default function Disputes() {
         </CardContent>
       </Card>
 
-      {/* Disputes List */}
+      {/* Disputes Table */}
       <Card className="admin-card">
         <CardHeader>
           <CardTitle>Disputes ({filteredDisputes.length})</CardTitle>
@@ -294,102 +294,108 @@ export default function Disputes() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredDisputes.map((dispute) => (
-              <div key={dispute.id} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-sm text-muted-foreground">{dispute.id}</span>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Dispute ID</TableHead>
+                  <TableHead>Order Number</TableHead>
+                  <TableHead>Buyer Name</TableHead>
+                  <TableHead>Seller Name</TableHead>
+                  <TableHead>Dispute Reason</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date Submitted</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredDisputes.map((dispute) => (
+                  <TableRow key={dispute.id} className="hover:bg-muted/50">
+                    <TableCell>
+                      <span className="font-mono text-sm">{dispute.id}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-mono text-sm">{dispute.orderId}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={dispute.buyer.avatar} alt={dispute.buyer.name} />
+                          <AvatarFallback className="text-xs">
+                            {dispute.buyer.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium">{dispute.buyer.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={dispute.seller.avatar} alt={dispute.seller.name} />
+                          <AvatarFallback className="text-xs">
+                            {dispute.seller.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium">{dispute.seller.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium">{dispute.reason}</div>
+                        <div className="flex items-center gap-2">
+                          <Badge className={`${getPriorityColor(dispute.priority)} text-xs`}>
+                            {dispute.priority} priority
+                          </Badge>
+                          <span className="text-xs font-medium">${dispute.amount}</span>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
                       <Badge className={getStatusColor(dispute.status)}>
                         {dispute.status.replace('_', ' ')}
                       </Badge>
-                      <Badge className={getPriorityColor(dispute.priority)}>
-                        {dispute.priority} priority
-                      </Badge>
-                      <span className="text-sm font-medium">${dispute.amount}</span>
-                    </div>
-                    
-                    <h3 className="font-medium text-foreground">{dispute.gigTitle}</h3>
-                    <p className="text-sm text-muted-foreground">{dispute.reason}</p>
-                    
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Buyer:</span>
-                        <div className="flex items-center gap-1">
-                          <Avatar className="h-5 w-5">
-                            <AvatarImage src={dispute.buyer.avatar} alt={dispute.buyer.name} />
-                            <AvatarFallback className="text-xs">
-                              {dispute.buyer.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">{dispute.buyer.name}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Seller:</span>
-                        <div className="flex items-center gap-1">
-                          <Avatar className="h-5 w-5">
-                            <AvatarImage src={dispute.seller.avatar} alt={dispute.seller.name} />
-                            <AvatarFallback className="text-xs">
-                              {dispute.seller.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">{dispute.seller.name}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <FileText className="h-3 w-3" />
-                        <span className="text-xs">{dispute.evidenceCount} evidence</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      <span>Opened {dispute.openedDate}</span>
-                      <span>•</span>
-                      <span>Last activity {dispute.lastActivity}</span>
-                      <span>•</span>
-                      <span>Order: {dispute.orderId}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setSelectedDispute(dispute)}>
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Details
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {dispute.status === "open" && (
-                      <DropdownMenuItem>
-                        <MessageSquare className="mr-2 h-4 w-4" />
-                        Start Review
-                      </DropdownMenuItem>
-                    )}
-                    {dispute.status !== "resolved" && (
-                      <>
-                        <DropdownMenuItem className="text-success">
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          Resolve
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
-                          <XCircle className="mr-2 h-4 w-4" />
-                          Escalate
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            ))}
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm text-muted-foreground">{dispute.openedDate}</span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setSelectedDispute(dispute)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          {dispute.status === "open" && (
+                            <DropdownMenuItem>
+                              <MessageSquare className="mr-2 h-4 w-4" />
+                              Start Review
+                            </DropdownMenuItem>
+                          )}
+                          {dispute.status !== "resolved" && (
+                            <>
+                              <DropdownMenuItem className="text-success">
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                                Resolve
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-destructive">
+                                <XCircle className="mr-2 h-4 w-4" />
+                                Escalate
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>

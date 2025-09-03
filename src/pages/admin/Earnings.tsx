@@ -307,76 +307,88 @@ export default function Earnings() {
             </CardContent>
           </Card>
 
-          {/* Transactions List */}
+          {/* Transactions Table */}
           <Card className="admin-card">
             <CardHeader>
               <CardTitle>Transactions ({filteredTransactions.length})</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {filteredTransactions.map((transaction) => (
-                  <div key={transaction.id} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center gap-3">
-                          <span className="font-mono text-sm text-muted-foreground">{transaction.id}</span>
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Transaction ID</TableHead>
+                      <TableHead>Buyer/Seller</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredTransactions.map((transaction) => (
+                      <TableRow key={transaction.id} className="hover:bg-muted/50">
+                        <TableCell>
+                          <span className="text-sm text-muted-foreground">{transaction.date}</span>
+                        </TableCell>
+                        <TableCell>
+                          <span className="font-mono text-sm">{transaction.id}</span>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className="text-sm font-medium">{transaction.user}</div>
+                            <div className="text-xs text-muted-foreground">{transaction.description}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
                           <Badge className={getTransactionTypeColor(transaction.type)}>
                             {transaction.type}
                           </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className={`font-medium ${transaction.amount >= 0 ? 'text-success' : 'text-destructive'}`}>
+                              ${Math.abs(transaction.amount).toFixed(2)}
+                            </div>
+                            {transaction.fee > 0 && (
+                              <div className="text-xs text-muted-foreground">
+                                Fee: ${transaction.fee.toFixed(2)}
+                              </div>
+                            )}
+                            <div className="text-xs text-muted-foreground">
+                              Net: ${transaction.netAmount.toFixed(2)}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
                           <Badge className={getStatusColor(transaction.status)}>
                             {transaction.status}
                           </Badge>
-                        </div>
-                        
-                        <h3 className="font-medium text-foreground">{transaction.description}</h3>
-                        
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span>{transaction.user}</span>
-                          <span>•</span>
-                          <span>{transaction.date}</span>
-                          {transaction.orderId && (
-                            <>
-                              <span>•</span>
-                              <span>Order: {transaction.orderId}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div className="text-right">
-                        <div className="font-medium text-foreground">
-                          ${Math.abs(transaction.amount).toFixed(2)}
-                        </div>
-                        {transaction.fee > 0 && (
-                          <div className="text-xs text-muted-foreground">
-                            Fee: ${transaction.fee.toFixed(2)}
-                          </div>
-                        )}
-                        <div className="text-xs text-muted-foreground">
-                          Net: ${transaction.netAmount.toFixed(2)}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Download className="mr-2 h-4 w-4" />
-                          Download Invoice
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                          View Details
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                ))}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Download className="mr-2 h-4 w-4" />
+                                Export PDF Invoice
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem>
+                                View Details
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </CardContent>
           </Card>
