@@ -71,17 +71,34 @@ export default function Analytics() {
       </div>
 
       {/* Key Performance Indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card className="admin-card">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Users</p>
-                <p className="text-2xl font-bold text-foreground">2,847</p>
-                <p className="text-xs text-success">+18.2% from last month</p>
+                <p className="text-sm text-muted-foreground">Total Students</p>
+                <p className="text-2xl font-bold text-foreground">1,248</p>
+                <p className="text-xs text-success">+12.4% from last month</p>
+                <p className="text-xs text-muted-foreground mt-1">Top locations: NY, CA, TX</p>
               </div>
               <div className="h-8 w-8 bg-primary/10 rounded-lg flex items-center justify-center">
                 <Users className="h-4 w-4 text-primary" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="admin-card">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Buyers</p>
+                <p className="text-2xl font-bold text-foreground">1,599</p>
+                <p className="text-xs text-success">+23.8% from last month</p>
+                <p className="text-xs text-muted-foreground mt-1">Recent sign-ups: 47 this week</p>
+              </div>
+              <div className="h-8 w-8 bg-accent/10 rounded-lg flex items-center justify-center">
+                <Users className="h-4 w-4 text-accent-foreground" />
               </div>
             </div>
           </CardContent>

@@ -154,12 +154,9 @@ export default function Settings() {
       </div>
 
       <Tabs defaultValue="categories" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="categories">Categories</TabsTrigger>
           <TabsTrigger value="pricing">Pricing</TabsTrigger>
-          <TabsTrigger value="communications">Communications</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
 
         <TabsContent value="categories" className="space-y-6">
@@ -195,6 +192,34 @@ export default function Settings() {
                           onChange={(e) => setNewCategoryName(e.target.value)}
                           placeholder="Enter category name..."
                         />
+                      </div>
+                      <div>
+                        <Label htmlFor="subcategory">Sub Category</Label>
+                        <div className="space-y-2">
+                          <Input
+                            id="subcategory"
+                            value={newSubcategory}
+                            onChange={(e) => setNewSubcategory(e.target.value)}
+                            placeholder="Enter sub category and press Enter..."
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                // Add subcategory logic here
+                              }
+                            }}
+                          />
+                          <div className="flex flex-wrap gap-1">
+                            {/* Sample tags - implement subcategory management */}
+                            <Badge variant="secondary" className="text-xs">
+                              Frontend Development
+                              <button className="ml-1 text-muted-foreground hover:text-foreground">×</button>
+                            </Badge>
+                            <Badge variant="secondary" className="text-xs">
+                              Backend Development
+                              <button className="ml-1 text-muted-foreground hover:text-foreground">×</button>
+                            </Badge>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <DialogFooter>
@@ -291,6 +316,14 @@ export default function Settings() {
                   </p>
                 </div>
                 
+                <div className="space-y-2">
+                  <Label htmlFor="orderThreshold">Order Value Threshold ($)</Label>
+                  <Input id="orderThreshold" type="number" defaultValue="100.00" step="0.01" />
+                  <p className="text-xs text-muted-foreground">
+                    Minimum order value for special processing
+                  </p>
+                </div>
+                
                 <Button className="w-full">Update Fee Structure</Button>
               </CardContent>
             </Card>
@@ -344,334 +377,6 @@ export default function Settings() {
           </div>
         </TabsContent>
 
-        <TabsContent value="communications" className="space-y-6">
-          <Card className="admin-card">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Mail className="h-5 w-5" />
-                    Email Templates
-                  </CardTitle>
-                  <CardDescription>
-                    Manage automated email templates and notifications
-                  </CardDescription>
-                </div>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Template
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {emailTemplates.map((template) => (
-                  <div key={template.id} className="flex items-center justify-between p-4 rounded-lg border bg-card">
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center gap-3">
-                          <h3 className="font-medium text-foreground">{template.name}</h3>
-                          <Badge className={getTemplateTypeColor(template.type)}>
-                            {template.type}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{template.subject}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Last modified: {template.lastModified}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="admin-card">
-            <CardHeader>
-              <CardTitle>Communication Settings</CardTitle>
-              <CardDescription>
-                Configure general communication preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Auto-send Welcome Emails</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Automatically send welcome emails to new users
-                  </p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Order Confirmations</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Send confirmation emails for new orders
-                  </p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Dispute Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Notify admins of new disputes
-                  </p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Marketing Emails</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Allow promotional emails to users
-                  </p>
-                </div>
-                <Switch />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="security" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="admin-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Authentication Settings
-                </CardTitle>
-                <CardDescription>
-                  Configure user authentication and security
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Two-Factor Authentication</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Require 2FA for all admin accounts
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Email Verification</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Require email verification for new accounts
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Password Complexity</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Enforce strong password requirements
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="sessionTimeout">Session Timeout (minutes)</Label>
-                  <Input id="sessionTimeout" type="number" defaultValue="30" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="admin-card">
-              <CardHeader>
-                <CardTitle>Access Control</CardTitle>
-                <CardDescription>
-                  Manage admin roles and permissions
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div>
-                      <p className="font-medium">Super Admin</p>
-                      <p className="text-sm text-muted-foreground">Full platform access</p>
-                    </div>
-                    <Badge>3 users</Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div>
-                      <p className="font-medium">Content Moderator</p>
-                      <p className="text-sm text-muted-foreground">Gig and user moderation</p>
-                    </div>
-                    <Badge variant="secondary">8 users</Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div>
-                      <p className="font-medium">Support Agent</p>
-                      <p className="text-sm text-muted-foreground">Customer support and disputes</p>
-                    </div>
-                    <Badge variant="secondary">12 users</Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div>
-                      <p className="font-medium">Analytics Viewer</p>
-                      <p className="text-sm text-muted-foreground">Read-only analytics access</p>
-                    </div>
-                    <Badge variant="secondary">5 users</Badge>
-                  </div>
-                </div>
-                
-                <Button className="w-full">
-                  <Users className="h-4 w-4 mr-2" />
-                  Manage Roles
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="notifications" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="admin-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="h-5 w-5" />
-                  Admin Notifications
-                </CardTitle>
-                <CardDescription>
-                  Configure when admins receive notifications
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>New User Registrations</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Notify when new users join
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>High-Value Orders</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Notify for orders above threshold
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="orderThreshold">Order Value Threshold ($)</Label>
-                  <Input id="orderThreshold" type="number" defaultValue="500" />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Security Alerts</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Failed logins and security events
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>System Issues</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Technical problems and downtime
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="admin-card">
-              <CardHeader>
-                <CardTitle>User Notifications</CardTitle>
-                <CardDescription>
-                  Control what notifications users receive
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Order Updates</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Status changes and milestones
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>New Messages</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Instant message notifications
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Marketing Updates</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Promotions and platform news
-                    </p>
-                  </div>
-                  <Switch />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Weekly Digest</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Summary of platform activity
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="digestDay">Digest Day</Label>
-                  <select id="digestDay" className="w-full p-2 border rounded-lg">
-                    <option>Monday</option>
-                    <option>Tuesday</option>
-                    <option>Wednesday</option>
-                    <option>Thursday</option>
-                    <option selected>Friday</option>
-                    <option>Saturday</option>
-                    <option>Sunday</option>
-                  </select>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
       </Tabs>
     </div>
   );

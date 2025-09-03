@@ -269,7 +269,9 @@ export default function Orders() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Order Date</TableHead>
-                  <TableHead>Gig/Service Title</TableHead>
+                  <TableHead>Service/Gig</TableHead>
+                  <TableHead>Buyer Name</TableHead>
+                  <TableHead>Student Name</TableHead>
                   <TableHead>Order Number</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Price</TableHead>
@@ -283,19 +285,28 @@ export default function Orders() {
                       <span className="text-sm text-muted-foreground">{order.orderDate}</span>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium text-foreground">{order.gigTitle}</div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Avatar className="h-4 w-4">
-                              <AvatarImage src={order.seller.avatar} alt={order.seller.name} />
-                              <AvatarFallback className="text-xs">
-                                {order.seller.name.split(' ').map(n => n[0]).join('')}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span>{order.seller.name}</span>
-                          </div>
-                        </div>
+                      <div className="font-medium text-foreground">{order.gigTitle}</div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={order.buyer.avatar} alt={order.buyer.name} />
+                          <AvatarFallback className="text-xs">
+                            {order.buyer.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium">{order.buyer.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={order.seller.avatar} alt={order.seller.name} />
+                          <AvatarFallback className="text-xs">
+                            {order.seller.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium">{order.seller.name}</span>
                       </div>
                     </TableCell>
                     <TableCell>

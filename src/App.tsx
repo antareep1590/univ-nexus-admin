@@ -16,6 +16,7 @@ import Earnings from "./pages/admin/Earnings";
 import Disputes from "./pages/admin/Disputes";
 import Analytics from "./pages/admin/Analytics";
 import Settings from "./pages/admin/Settings";
+import IssueRefund from "./pages/admin/IssueRefund";
 import { AdminLayout } from "./components/AdminLayout";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/admin/disputes" element={<AdminLayout><Disputes /></AdminLayout>} />
           <Route path="/admin/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />
           <Route path="/admin/settings" element={<AdminLayout><Settings /></AdminLayout>} />
+          <Route path="/admin/refund" element={<AdminLayout><IssueRefund /></AdminLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

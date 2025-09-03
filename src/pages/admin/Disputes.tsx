@@ -300,9 +300,11 @@ export default function Disputes() {
                 <TableRow>
                   <TableHead>Dispute ID</TableHead>
                   <TableHead>Order Number</TableHead>
-                  <TableHead>Buyer Name</TableHead>
-                  <TableHead>Seller Name</TableHead>
+                  <TableHead>Buyer</TableHead>
+                  <TableHead>Student</TableHead>
                   <TableHead>Dispute Reason</TableHead>
+                  <TableHead>Priority</TableHead>
+                  <TableHead>Price</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date Submitted</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -340,15 +342,15 @@ export default function Disputes() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">{dispute.reason}</div>
-                        <div className="flex items-center gap-2">
-                          <Badge className={`${getPriorityColor(dispute.priority)} text-xs`}>
-                            {dispute.priority} priority
-                          </Badge>
-                          <span className="text-xs font-medium">${dispute.amount}</span>
-                        </div>
-                      </div>
+                      <div className="text-sm">{dispute.reason}</div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={`${getPriorityColor(dispute.priority)} text-xs`}>
+                        {dispute.priority}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium">${dispute.amount}</span>
                     </TableCell>
                     <TableCell>
                       <Badge className={getStatusColor(dispute.status)}>
