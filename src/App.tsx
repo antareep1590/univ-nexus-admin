@@ -8,10 +8,14 @@ import NotFound from "./pages/NotFound";
 import SignIn from "./pages/admin/SignIn";
 import Dashboard from "./pages/admin/Dashboard";
 import Students from "./pages/admin/Students";
+import StudentProfile from "./pages/admin/StudentProfile";
 import Buyers from "./pages/admin/Buyers";
+import BuyerProfile from "./pages/admin/BuyerProfile";
 import Profile from "./pages/admin/Profile";
 import Gigs from "./pages/admin/Gigs";
+import GigDetails from "./pages/admin/GigDetails";
 import Orders from "./pages/admin/Orders";
+import OrderDetails from "./pages/admin/OrderDetails";
 import Earnings from "./pages/admin/Earnings";
 import Disputes from "./pages/admin/Disputes";
 import Analytics from "./pages/admin/Analytics";
@@ -32,10 +36,14 @@ const App = () => (
           <Route path="/signin" element={<SignIn />} />
           <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
           <Route path="/admin/students" element={<AdminLayout><Students /></AdminLayout>} />
+          <Route path="/admin/students/:id" element={<AdminLayout><StudentProfile /></AdminLayout>} />
           <Route path="/admin/buyers" element={<AdminLayout><Buyers /></AdminLayout>} />
+          <Route path="/admin/buyers/:id" element={<AdminLayout><BuyerProfile /></AdminLayout>} />
           <Route path="/admin/profile" element={<AdminLayout><Profile /></AdminLayout>} />
           <Route path="/admin/gigs" element={<AdminLayout><Gigs /></AdminLayout>} />
+          <Route path="/admin/gigs/:id" element={<AdminLayout><GigDetails /></AdminLayout>} />
           <Route path="/admin/orders" element={<AdminLayout><Orders /></AdminLayout>} />
+          <Route path="/admin/orders/:id" element={<AdminLayout><OrderDetails /></AdminLayout>} />
           <Route path="/admin/earnings" element={<AdminLayout><Earnings /></AdminLayout>} />
           <Route path="/admin/disputes" element={<AdminLayout><Disputes /></AdminLayout>} />
           <Route path="/admin/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />

@@ -84,16 +84,16 @@ const mockStudents: Student[] = [
 export default function Students() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [levelFilter, setLevelFilter] = useState<string>("all");
+  
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
 
   const filteredStudents = mockStudents.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          student.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || student.status === statusFilter;
-    const matchesLevel = levelFilter === "all" || student.profileLevel === levelFilter;
     
-    return matchesSearch && matchesStatus && matchesLevel;
+    
+    return matchesSearch && matchesStatus;
   });
 
   const getStatusColor = (status: string) => {
@@ -183,17 +183,6 @@ export default function Students() {
                 <SelectItem value="suspended">Suspended</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={levelFilter} onValueChange={setLevelFilter}>
-              <SelectTrigger className="w-full sm:w-[150px]">
-                <SelectValue placeholder="Level" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Levels</SelectItem>
-                <SelectItem value="beginner">Beginner</SelectItem>
-                <SelectItem value="intermediate">Intermediate</SelectItem>
-                <SelectItem value="expert">Expert</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
@@ -238,7 +227,7 @@ export default function Students() {
                   <TableHead>Registration Date</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Gigs</TableHead>
-                  <TableHead>Level</TableHead>
+                  
                   <TableHead className="w-16">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -273,11 +262,6 @@ export default function Students() {
                     </TableCell>
                     <TableCell>{student.gigsCount}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={getLevelColor(student.profileLevel)}>
-                        {student.profileLevel}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
@@ -285,7 +269,7 @@ export default function Students() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => window.location.href = `/admin/students/${student.id}`}>
                             <Eye className="mr-2 h-4 w-4" />
                             View Profile
                           </DropdownMenuItem>

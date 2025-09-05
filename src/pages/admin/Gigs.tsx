@@ -335,7 +335,7 @@ export default function Gigs() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setReviewingGig(gig)}>
+                          <DropdownMenuItem onClick={() => window.location.href = `/admin/gigs/${gig.id}`}>
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
