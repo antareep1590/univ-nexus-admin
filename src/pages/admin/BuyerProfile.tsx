@@ -132,15 +132,9 @@ export default function BuyerProfile() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Message
-                  </Button>
-                  <Button variant="outline">
-                    Suspend Account
-                  </Button>
-                </div>
+                <Button variant="outline">
+                  Suspend Account
+                </Button>
               </div>
               
               {/* Quick Stats */}
@@ -167,56 +161,22 @@ export default function BuyerProfile() {
         </CardContent>
       </Card>
 
-      {/* Personal Information & Preferences */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="admin-card">
-          <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">University</label>
-              <p className="text-foreground">{mockBuyer.university}</p>
+      {/* Personal Information */}
+      <Card className="admin-card">
+        <CardHeader>
+          <CardTitle>Personal Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div>
+            <label className="text-sm font-medium text-muted-foreground">Preferred Categories</label>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {mockBuyer.preferredCategories.map((category, index) => (
+                <Badge key={index} variant="secondary">{category}</Badge>
+              ))}
             </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Major</label>
-              <p className="text-foreground">{mockBuyer.major}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Preferred Categories</label>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {mockBuyer.preferredCategories.map((category, index) => (
-                  <Badge key={index} variant="secondary">{category}</Badge>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="admin-card">
-          <CardHeader>
-            <CardTitle>Preferences</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Communication Style</label>
-              <p className="text-foreground">{mockBuyer.preferences.communicationStyle}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Typical Budget</label>
-              <p className="text-foreground">{mockBuyer.preferences.budget}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Delivery Preference</label>
-              <p className="text-foreground">{mockBuyer.preferences.deliveryPreference}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Payment Method</label>
-              <p className="text-foreground">{mockBuyer.preferences.paymentMethod}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Order History */}
       <Card className="admin-card">
@@ -269,56 +229,6 @@ export default function BuyerProfile() {
         </CardContent>
       </Card>
 
-      {/* Summary Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="admin-card">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Completed Orders</p>
-                <p className="text-2xl font-bold text-success">{mockBuyer.stats.completedOrders}</p>
-              </div>
-              <ShoppingCart className="h-8 w-8 text-success/20" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="admin-card">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Avg Rating Given</p>
-                <p className="text-2xl font-bold text-warning">{mockBuyer.stats.avgRating}</p>
-              </div>
-              <Star className="h-8 w-8 text-warning/20" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="admin-card">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Saved</p>
-                <p className="text-2xl font-bold text-primary">{mockBuyer.stats.totalSaved}</p>
-              </div>
-              <DollarSign className="h-8 w-8 text-primary/20" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="admin-card">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Loyalty Level</p>
-                <p className="text-2xl font-bold text-accent-foreground">{mockBuyer.stats.loyaltyLevel}</p>
-              </div>
-              <Badge className="h-8 w-8 rounded-full p-0 flex items-center justify-center bg-accent/20" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

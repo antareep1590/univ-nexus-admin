@@ -25,7 +25,7 @@ export function Header() {
       </div>
       
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative hover:bg-muted/50 transition-colors">
           <Bell className="h-5 w-5" />
           <span className="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full text-[10px] text-primary-foreground flex items-center justify-center">
             3
@@ -34,7 +34,7 @@ export function Header() {
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="hover:bg-muted/50 transition-colors">
               <User className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>

@@ -125,9 +125,8 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Profile Overview */}
-        <Card className="admin-card lg:col-span-2">
+      {/* Profile Overview */}
+      <Card className="admin-card max-w-4xl">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -200,8 +199,8 @@ export default function Profile() {
                   id="email"
                   type="email"
                   value={profile.email}
-                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                  disabled={!isEditing}
+                  disabled
+                  className="bg-muted text-muted-foreground"
                 />
               </div>
               <div className="space-y-2">
@@ -219,142 +218,8 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* Password Change */}
-            {isEditing && (
-              <>
-                <Separator />
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold">Change Password</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="currentPassword">Current Password</Label>
-                      <div className="relative">
-                        <Input
-                          id="currentPassword"
-                          type={showCurrentPassword ? "text" : "password"}
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                          placeholder="Enter current password"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3"
-                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                        >
-                          {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="newPassword">New Password</Label>
-                      <div className="relative">
-                        <Input
-                          id="newPassword"
-                          type={showNewPassword ? "text" : "password"}
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          placeholder="Enter new password"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3"
-                          onClick={() => setShowNewPassword(!showNewPassword)}
-                        >
-                          {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Confirm Password</Label>
-                      <div className="relative">
-                        <Input
-                          id="confirmPassword"
-                          type={showConfirmPassword ? "text" : "password"}
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          placeholder="Confirm new password"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        >
-                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
           </CardContent>
         </Card>
-
-        {/* Security Settings */}
-        <Card className="admin-card">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              Security Settings
-            </CardTitle>
-            <CardDescription>
-              Manage your account security preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <Smartphone className="h-4 w-4" />
-                  <Label className="text-sm font-medium">Two-Factor Authentication</Label>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Add an extra layer of security to your account
-                </p>
-              </div>
-              <Switch
-                checked={profile.twoFactorEnabled}
-                onCheckedChange={handleToggle2FA}
-              />
-            </div>
-
-            <Separator />
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold">Active Sessions</h4>
-              {activeSessions.map((session) => (
-                <div key={session.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium">{session.device}</p>
-                      {session.current && (
-                        <Badge variant="outline" className="text-xs">Current</Badge>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">{session.location}</p>
-                    <p className="text-xs text-muted-foreground">{session.lastActive}</p>
-                  </div>
-                  {!session.current && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleLogoutSession(session.id)}
-                    >
-                      <LogOut className="h-3 w-3" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

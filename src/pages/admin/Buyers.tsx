@@ -337,12 +337,7 @@ export default function Buyers() {
                       <TableCell>{buyer.totalOrders}</TableCell>
                       <TableCell className="text-muted-foreground">{buyer.lastOrderDate}</TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">${buyer.totalSpent}</span>
-                          <Badge variant="outline" className={spendingLevel.color}>
-                            {spendingLevel.level}
-                          </Badge>
-                        </div>
+                        <span className="font-medium">${buyer.totalSpent}</span>
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>

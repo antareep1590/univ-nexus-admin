@@ -45,20 +45,20 @@ export function AppSidebar() {
   const isExpanded = navigation.some((i) => isActive(i.href));
 
   const getNavCls = (active: boolean) =>
-    active ? "bg-admin-sidebar-accent/20 text-admin-sidebar-accent border-r-2 border-admin-sidebar-accent" : "hover:bg-admin-sidebar-accent/10";
+    active ? "bg-primary/20 text-primary border-r-2 border-primary font-medium" : "hover:bg-muted/50 transition-colors duration-200";
 
   return (
     <Sidebar
-      className={`border-r admin-sidebar ${state === "collapsed" ? "w-16" : "w-64"}`}
+      className={`border-r border-border bg-sidebar ${state === "collapsed" ? "w-16" : "w-64"}`}
       collapsible="icon"
     >
-      <SidebarContent className="bg-admin-sidebar">
+      <SidebarContent className="bg-sidebar border-r-0">
         {state !== "collapsed" && (
           <div className="p-6">
-            <h2 className="text-xl font-bold bg-gradient-to-r from-admin-sidebar-accent to-admin-sidebar-accent/80 bg-clip-text text-transparent">
+            <h2 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               Univ Jobs
             </h2>
-            <p className="text-xs text-admin-sidebar-foreground/60 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Admin Portal
             </p>
           </div>
@@ -66,7 +66,7 @@ export function AppSidebar() {
         
         <SidebarGroup>
           {state !== "collapsed" && (
-            <SidebarGroupLabel className="text-admin-sidebar-foreground/80">
+            <SidebarGroupLabel className="text-muted-foreground text-xs uppercase tracking-wider">
               Main Navigation
             </SidebarGroupLabel>
           )}
