@@ -112,10 +112,6 @@ export default function StudentProfile() {
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Message
-                  </Button>
-                  <Button variant="outline">
                     Suspend Account
                   </Button>
                 </div>
