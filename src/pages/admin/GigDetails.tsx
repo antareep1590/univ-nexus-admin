@@ -173,10 +173,6 @@ export default function GigDetails() {
               </Button>
             </>
           )}
-          <Button variant="outline">
-            <Edit className="h-4 w-4 mr-2" />
-            Edit
-          </Button>
         </div>
       </div>
 
@@ -216,25 +212,6 @@ export default function GigDetails() {
               </div>
             </div>
             
-            {/* Performance Stats */}
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-primary">{mockGig.stats.views}</div>
-                <div className="text-xs text-muted-foreground">Views</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-accent-foreground">{mockGig.stats.clicks}</div>
-                <div className="text-xs text-muted-foreground">Clicks</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-success">{mockGig.stats.saves}</div>
-                <div className="text-xs text-muted-foreground">Saves</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-warning">{mockGig.stats.orders}</div>
-                <div className="text-xs text-muted-foreground">Orders</div>
-              </div>
-            </div>
           </div>
         </CardContent>
       </Card>
@@ -347,22 +324,13 @@ export default function GigDetails() {
               <div className="space-y-4">
                 {mockGig.enquiries.map((enquiry) => (
                   <div key={enquiry.id} className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h4 className="font-medium">{enquiry.buyer}</h4>
-                        <p className="text-sm text-muted-foreground">{enquiry.date}</p>
-                      </div>
-                      <Badge variant={enquiry.replied ? "secondary" : "destructive"}>
-                        {enquiry.replied ? "Replied" : "Pending"}
-                      </Badge>
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium">{enquiry.buyer}</h4>
+                      <p className="text-sm text-muted-foreground">{enquiry.date}</p>
                     </div>
-                    <p className="text-sm text-foreground">{enquiry.message}</p>
-                    {!enquiry.replied && (
-                      <Button variant="outline" size="sm" className="mt-3">
-                        <MessageSquare className="h-3 w-3 mr-2" />
-                        Remind Seller to Reply
-                      </Button>
-                    )}
+                  </div>
+                  <p className="text-sm text-foreground">{enquiry.message}</p>
                   </div>
                 ))}
               </div>

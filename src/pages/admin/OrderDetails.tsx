@@ -1,11 +1,15 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, MessageSquare, Calendar, DollarSign, Clock, CheckCircle, AlertTriangle, FileText, User } from "lucide-react";
+import { ArrowLeft, MessageSquare, Calendar, DollarSign, Clock, CheckCircle, AlertTriangle, FileText, User, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -122,6 +126,10 @@ export default function OrderDetails() {
   const navigate = useNavigate();
   const [showResolveDialog, setShowResolveDialog] = useState(false);
   const [showNotDisputeDialog, setShowNotDisputeDialog] = useState(false);
+  const [showRefundModal, setShowRefundModal] = useState(false);
+  const [refundAmount, setRefundAmount] = useState("");
+  const [refundReason, setRefundReason] = useState("");
+  const [refundFile, setRefundFile] = useState<File | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -218,10 +226,83 @@ export default function OrderDetails() {
               </Dialog>
             </>
           )}
-          <Button variant="outline">
-            <DollarSign className="h-4 w-4 mr-2" />
-            Issue Refund
-          </Button>
+          
+          <Dialog open={showRefundModal} onOpenChange={setShowRefundModal}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <DollarSign className="h-4 w-4 mr-2" />
+                Issue Refund
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Issue Refund</DialogTitle>
+                <DialogDescription>
+                  Process a refund for this order. This action cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="refund-amount">Refund Amount ($)</Label>
+                  <Input
+                    id="refund-amount"
+                    type="number"
+                    placeholder="0.00"
+                    value={refundAmount}
+                    onChange={(e) => setRefundAmount(e.target.value)}
+                    max={mockOrder.amount}
+                    min={0}
+                    step="0.01"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Maximum refund: ${mockOrder.amount}
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="refund-reason">Reason for Refund</Label>
+                  <Textarea
+                    id="refund-reason"
+                    placeholder="Enter the reason for issuing this refund..."
+                    value={refundReason}
+                    onChange={(e) => setRefundReason(e.target.value)}
+                    minLength={10}
+                    maxLength={250}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {refundReason.length}/250 characters (minimum 10)
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="refund-file">Supporting Document (Optional)</Label>
+                  <Input
+                    id="refund-file"
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={(e) => setRefundFile(e.target.files?.[0] || null)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    PDF, JPG, or PNG files only. Maximum 5MB.
+                  </p>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowRefundModal(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={() => setShowRefundModal(false)}
+                  disabled={
+                    !refundAmount || 
+                    parseFloat(refundAmount) <= 0 || 
+                    parseFloat(refundAmount) > mockOrder.amount ||
+                    refundReason.length < 10
+                  }
+                >
+                  Process Refund
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -252,11 +333,7 @@ export default function OrderDetails() {
             
             <div className="text-right">
               <div className="text-sm text-muted-foreground mb-1">Order Progress</div>
-              <div className="text-2xl font-bold text-foreground mb-2">{calculateProgress()}%</div>
               <Progress value={calculateProgress()} className="w-32" />
-              <div className="text-xs text-muted-foreground mt-1">
-                {mockOrder.milestones.completed}/{mockOrder.milestones.total} milestones
-              </div>
             </div>
           </div>
           
@@ -299,123 +376,92 @@ export default function OrderDetails() {
         </CardContent>
       </Card>
 
-      {/* Order Timeline */}
-      <Card className="admin-card">
-        <CardHeader>
-          <CardTitle>Order Timeline</CardTitle>
-          <CardDescription>Complete history of order progress and activities</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {mockOrder.timeline.map((event, index) => (
-              <div key={index} className="flex items-start gap-4">
-                <div className="flex flex-col items-center">
-                  {getTimelineStatusIcon(event.status)}
-                  {index < mockOrder.timeline.length - 1 && (
-                    <div className="w-px h-8 bg-border mt-2" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-foreground">{event.title}</h4>
-                    <span className="text-sm text-muted-foreground">{event.date}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Order Details Tabs */}
+      <Tabs defaultValue="timeline" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="timeline">Order Timeline</TabsTrigger>
+          <TabsTrigger value="communications">Communications</TabsTrigger>
+        </TabsList>
 
-      {/* Order Requirements */}
-      <Card className="admin-card">
-        <CardHeader>
-          <CardTitle>Order Requirements</CardTitle>
-          <CardDescription>Buyer's specifications and project details</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-2">Project Description</h4>
-            <p className="text-sm text-muted-foreground">{mockOrder.requirements.description}</p>
-          </div>
-          
-          <Separator />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h4 className="font-medium mb-1">Industry</h4>
-              <p className="text-sm text-muted-foreground">{mockOrder.requirements.industry}</p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-1">Target Audience</h4>
-              <p className="text-sm text-muted-foreground">{mockOrder.requirements.targetAudience}</p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-1">Preferred Colors</h4>
-              <p className="text-sm text-muted-foreground">{mockOrder.requirements.preferredColors}</p>
-            </div>
-          </div>
-          
-          {mockOrder.requirements.additionalNotes && (
-            <>
-              <Separator />
-              <div>
-                <h4 className="font-medium mb-2">Additional Notes</h4>
-                <p className="text-sm text-muted-foreground">{mockOrder.requirements.additionalNotes}</p>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Communications */}
-      <Card className="admin-card">
-        <CardHeader>
-          <CardTitle>Order Communications</CardTitle>
-          <CardDescription>Messages between buyer and seller</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {mockOrder.communications.map((message) => (
-              <div key={message.id} className={`flex gap-3 ${message.sender === 'buyer' ? 'flex-row' : 'flex-row-reverse'}`}>
-                <Avatar className="h-8 w-8">
-                  <AvatarImage 
-                    src={message.sender === 'buyer' ? mockOrder.buyer.avatar : mockOrder.seller.avatar} 
-                    alt={message.sender === 'buyer' ? mockOrder.buyer.name : mockOrder.seller.name} 
-                  />
-                  <AvatarFallback>
-                    {message.sender === 'buyer' ? 'B' : 'S'}
-                  </AvatarFallback>
-                </Avatar>
-                
-                <div className={`flex-1 max-w-lg ${message.sender === 'buyer' ? 'mr-auto' : 'ml-auto'}`}>
-                  <div className={`p-3 rounded-lg ${
-                    message.sender === 'buyer' 
-                      ? 'bg-muted text-foreground' 
-                      : 'bg-primary text-primary-foreground'
-                  }`}>
-                    <p className="text-sm">{message.message}</p>
-                    {message.attachments.length > 0 && (
-                      <div className="mt-2 space-y-1">
-                        {message.attachments.map((file, index) => (
-                          <div key={index} className="flex items-center gap-2 text-xs">
-                            <FileText className="h-3 w-3" />
-                            <span>{file}</span>
-                          </div>
-                        ))}
+        <TabsContent value="timeline" className="space-y-6">
+          <Card className="admin-card">
+            <CardHeader>
+              <CardTitle>Order Timeline</CardTitle>
+              <CardDescription>Complete history of order progress and activities</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {mockOrder.timeline.map((event, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="flex flex-col items-center">
+                      {getTimelineStatusIcon(event.status)}
+                      {index < mockOrder.timeline.length - 1 && (
+                        <div className="w-px h-8 bg-border mt-2" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-foreground">{event.title}</h4>
+                        <span className="text-sm text-muted-foreground">{event.date}</span>
                       </div>
-                    )}
+                      <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1 text-right">
-                    {message.timestamp}
-                  </p>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="communications" className="space-y-6">
+          <Card className="admin-card">
+            <CardHeader>
+              <CardTitle>Order Communications</CardTitle>
+              <CardDescription>Messages between buyer and seller</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {mockOrder.communications.map((message) => (
+                  <div key={message.id} className={`flex gap-3 ${message.sender === 'buyer' ? 'flex-row' : 'flex-row-reverse'}`}>
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage 
+                        src={message.sender === 'buyer' ? mockOrder.buyer.avatar : mockOrder.seller.avatar} 
+                        alt={message.sender === 'buyer' ? mockOrder.buyer.name : mockOrder.seller.name} 
+                      />
+                      <AvatarFallback>
+                        {message.sender === 'buyer' ? 'B' : 'S'}
+                      </AvatarFallback>
+                    </Avatar>
+                    
+                    <div className={`flex-1 max-w-lg ${message.sender === 'buyer' ? 'mr-auto' : 'ml-auto'}`}>
+                      <div className={`p-3 rounded-lg ${
+                        message.sender === 'buyer' 
+                          ? 'bg-muted text-foreground' 
+                          : 'bg-primary text-primary-foreground'
+                      }`}>
+                        <p className="text-sm">{message.message}</p>
+                        {message.attachments.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {message.attachments.map((file, index) => (
+                              <div key={index} className="flex items-center gap-2 text-xs">
+                                <FileText className="h-3 w-3" />
+                                <span>{file}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1 text-right">
+                        {message.timestamp}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

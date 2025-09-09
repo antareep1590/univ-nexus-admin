@@ -41,15 +41,13 @@ interface Gig {
     rating: number;
     avatar?: string;
   };
-  status: "pending" | "approved" | "rejected" | "flagged";
+  status: "pending" | "approved" | "rejected";
   submissionDate: string;
   packages: {
     basic: number;
     standard: number;
     premium: number;
   };
-  flags: string[];
-  reports: number;
 }
 
 const mockGigs: Gig[] = [
@@ -64,9 +62,7 @@ const mockGigs: Gig[] = [
     },
     status: "pending",
     submissionDate: "2024-08-15",
-    packages: { basic: 50, standard: 100, premium: 200 },
-    flags: [],
-    reports: 0
+    packages: { basic: 50, standard: 100, premium: 200 }
   },
   {
     id: "2",
@@ -76,11 +72,9 @@ const mockGigs: Gig[] = [
       name: "Mike Chen",
       rating: 4.9
     },
-    status: "flagged",
+    status: "rejected",
     submissionDate: "2024-08-14",
-    packages: { basic: 25, standard: 50, premium: 100 },
-    flags: ["Potential copyright violation"],
-    reports: 2
+    packages: { basic: 25, standard: 50, premium: 100 }
   },
   {
     id: "3",
@@ -92,9 +86,7 @@ const mockGigs: Gig[] = [
     },
     status: "approved",
     submissionDate: "2024-08-13",
-    packages: { basic: 30, standard: 60, premium: 120 },
-    flags: [],
-    reports: 0
+    packages: { basic: 30, standard: 60, premium: 120 }
   }
 ];
 
@@ -123,8 +115,6 @@ export default function Gigs() {
         return "bg-warning text-warning-foreground";
       case "rejected":
         return "bg-destructive text-destructive-foreground";
-      case "flagged":
-        return "bg-destructive/80 text-destructive-foreground";
       default:
         return "bg-muted text-muted-foreground";
     }
@@ -155,7 +145,7 @@ export default function Gigs() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Gig Management</h1>
           <p className="text-muted-foreground mt-2">
-            Review and moderate gig submissions and content reports
+            Review and moderate gig submissions
           </p>
         </div>
         <div className="flex gap-2">
@@ -182,7 +172,7 @@ export default function Gigs() {
         <CardHeader>
           <CardTitle>Moderation Queue</CardTitle>
           <CardDescription>
-            Review gig submissions and manage content reports
+            Review gig submissions and manage content
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -205,7 +195,6 @@ export default function Gigs() {
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>
-                <SelectItem value="flagged">Flagged</SelectItem>
               </SelectContent>
             </Select>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -278,23 +267,7 @@ export default function Gigs() {
                       />
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium text-foreground">{gig.title}</div>
-                        {gig.flags.length > 0 && (
-                          <div className="flex items-center gap-2">
-                            <Badge variant="destructive" className="text-xs">
-                              <Flag className="h-3 w-3 mr-1" />
-                              {gig.flags.length} Flag{gig.flags.length > 1 ? 's' : ''}
-                            </Badge>
-                            <span className="text-xs text-destructive">{gig.flags.join(', ')}</span>
-                          </div>
-                        )}
-                        {gig.reports > 0 && (
-                          <Badge variant="outline" className="text-destructive text-xs">
-                            {gig.reports} Report{gig.reports > 1 ? 's' : ''}
-                          </Badge>
-                        )}
-                      </div>
+                      <div className="font-medium text-foreground">{gig.title}</div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -410,25 +383,6 @@ export default function Gigs() {
                 </div>
               </div>
               
-              {/* Flags and Reports */}
-              {(reviewingGig.flags.length > 0 || reviewingGig.reports > 0) && (
-                <div>
-                  <h4 className="font-medium mb-2">Issues</h4>
-                  <div className="space-y-2">
-                    {reviewingGig.flags.map((flag, index) => (
-                      <div key={index} className="flex items-center gap-2 text-destructive">
-                        <Flag className="h-4 w-4" />
-                        <span className="text-sm">{flag}</span>
-                      </div>
-                    ))}
-                    {reviewingGig.reports > 0 && (
-                      <div className="text-sm text-muted-foreground">
-                        {reviewingGig.reports} user report{reviewingGig.reports > 1 ? 's' : ''} filed
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           )}
           

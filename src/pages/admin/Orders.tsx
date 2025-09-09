@@ -313,17 +313,9 @@ export default function Orders() {
                       <span className="font-mono text-sm">{order.id}</span>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Badge className={getStatusColor(order.status)}>
-                          {order.status}
-                        </Badge>
-                        {order.hasDispute && (
-                          <Badge variant="destructive" className="text-xs">
-                            <AlertTriangle className="h-3 w-3 mr-1" />
-                            Dispute
-                          </Badge>
-                        )}
-                      </div>
+                      <Badge className={getStatusColor(order.status)}>
+                        {order.status}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <span className="font-medium">${order.amount}</span>
@@ -339,15 +331,6 @@ export default function Orders() {
                           <DropdownMenuItem onClick={() => window.location.href = `/admin/orders/${order.id}`}>
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>
-                            <DollarSign className="mr-2 h-4 w-4" />
-                            Issue Refund
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
-                            <XCircle className="mr-2 h-4 w-4" />
-                            Cancel Order
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
